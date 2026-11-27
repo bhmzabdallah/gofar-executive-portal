@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23c84b31'/%3E%3C/svg%3E" />
+  <title>GoFar Industrial Control | Authorized Commercial Portal</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: #090d16;
+      color: #f8fafc;
+      -webkit-font-smoothing: antialiased;
+    }
+    .gate-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at 50% 0%, #132038 0%, #090d16 68%);
+    }
+    .gate-topbar {
+      height: 88px;
+      background: #0f172a;
+      border-bottom: 1px solid #1e293b;
+      display: flex;
+      align-items: center;
+      padding: 0 clamp(16px, 3vw, 40px);
+    }
+    .gate-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .gate-emblem {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #c84b31, #e06d53);
+      flex-shrink: 0;
+    }
+    .gate-brand-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #e06d53;
+      letter-spacing: -0.02em;
+    }
+    .gate-center {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+    .gate-card {
+      width: 100%;
+      max-width: 460px;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 32px 28px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+    }
+    .gate-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: #93c5fd;
+      background: rgba(59, 130, 246, 0.14);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      margin-bottom: 14px;
+    }
+    .gate-heading {
+      margin: 0 0 8px 0;
+      font-size: 22px;
+      font-weight: 700;
+      color: #f8fafc;
+      letter-spacing: -0.02em;
+    }
+    .gate-copy {
+      margin: 0 0 22px 0;
+      font-size: 14px;
+      line-height: 1.55;
+      color: #cbd5e1;
+    }
+    .gate-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 6px;
+    }
+    .gate-input-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .gate-input {
+      flex: 1;
+      min-width: 0;
+      height: 42px;
+      padding: 0 12px;
+      border-radius: 6px;
+      border: 1px solid #3b82f6;
+      background: #1e293b;
+      color: #f8fafc;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 14px;
+    }
+    .gate-input:focus {
+      outline: 2px solid #60a5fa;
+      outline-offset: 1px;
+    }
+    .gate-toggle-btn {
+      height: 42px;
+      padding: 0 12px;
+      border-radius: 6px;
+      border: 1px solid #475569;
+      background: #1e293b;
+      color: #e2e8f0;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .gate-submit-btn {
+      width: 100%;
+      height: 44px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: linear-gradient(135deg, #9a3412, #b83b20);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: filter 150ms ease;
+    }
+    .gate-submit-btn:hover:not(:disabled) {
+      filter: brightness(1.1);
+    }
+    .gate-submit-btn:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+    .gate-progress-wrap {
+      margin-top: 16px;
+      display: none;
+    }
+    .gate-progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #1e293b;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .gate-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #3b82f6, #10b981);
+      transition: width 140ms ease;
+    }
+    .gate-status {
+      margin-top: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      color: #93c5fd;
+    }
+    .gate-error {
+      margin-top: 14px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      background: rgba(239, 68, 68, 0.14);
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      color: #fca5a5;
+      font-size: 13px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="gate-shell" class="gate-shell">
+    <header class="gate-topbar">
+      <div class="gate-brand">
+        <span class="gate-emblem" aria-hidden="true"></span>
+        <span class="gate-brand-title">GoFar Industrial Control</span>
+      </div>
+    </header>
+    <main class="gate-center">
+      <form id="gate-form" class="gate-card" autocomplete="off">
+        <span class="gate-badge">AES-256-GCM · PBKDF2-SHA256 (600,000 ITERATIONS)</span>
+        <h1 class="gate-heading">Authorized Commercial Showcase</h1>
+        <p class="gate-copy">
+          Enter your GoFar evaluation passphrase to derive the session decryption key locally in WebCrypto. Zero credentials leave your browser.
+        </p>
+        <label class="gate-label" for="gate-passphrase-input">Evaluation Access Passphrase</label>
+        <div class="gate-input-row">
+          <input
+            id="gate-passphrase-input"
+            type="password"
+            required
+            spellcheck="false"
+            placeholder="GF-XXXXX-XXXXX-..."
+            class="gate-input"
+          />
+          <button type="button" id="gate-toggle-vis" aria-pressed="false" aria-label="Show or hide passphrase" class="gate-toggle-btn">Show</button>
+        </div>
+        <button type="submit" id="gate-unlock-btn" class="gate-submit-btn">
+          Unlock Commercial Showcase
+        </button>
+        <div id="gate-progress-wrap" class="gate-progress-wrap">
+          <div class="gate-progress-bar"><div id="gate-progress-fill" class="gate-progress-fill"></div></div>
+          <div id="gate-status" class="gate-status" aria-live="polite">Initializing WebCrypto...</div>
+        </div>
+        <div id="gate-error" class="gate-error" role="alert"></div>
+      </form>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const BACKOFF_MS = [400, 1000, 2000, 3500];
+      const MAX_WORKERS = 4;
+      const enc = new TextEncoder();
+      const dec = new TextDecoder();
+
+      const gateShell = document.getElementById('gate-shell');
+      const form = document.getElementById('gate-form');
+      const passInput = document.getElementById('gate-passphrase-input');
+      const toggleBtn = document.getElementById('gate-toggle-vis');
+      const submitBtn = document.getElementById('gate-unlock-btn');
+      const progWrap = document.getElementById('gate-progress-wrap');
+      const progFill = document.getElementById('gate-progress-fill');
+      const statusEl = document.getElementById('gate-status');
+      const errorEl = document.getElementById('gate-error');
+
+      let activeSessionId = 0;
+      let createdBlobUrls = [];
+      let mountedDomNodes = [];
+
+      function normalizePassphrase(raw) {
+        return String(raw || '').replace(/[\r\n]+/g, '').trim();
+      }
+
+      passInput.addEventListener('paste', function () {
+        setTimeout(function () {
+          passInput.value = normalizePassphrase(passInput.value);
+        }, 0);
+      });
+
+      toggleBtn.addEventListener('click', function () {
+        const isPw = passInput.type === 'password';
+        passInput.type = isPw ? 'text' : 'password';
+        toggleBtn.textContent = isPw ? 'Hide' : 'Show';
+        toggleBtn.setAttribute('aria-pressed', isPw ? 'true' : 'false');
+      });
+
+      function b64ToBytes(b64) {
+        const bin = atob(b64);
+        const out = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+        return out;
+      }
+
+      function sleep(ms) {
+        return new Promise(function (resolve) { setTimeout(resolve, ms); });
+      }
+
+      async function fetchWithRetry(url) {
+        let lastErr = null;
+        for (let attempt = 0; attempt <= BACKOFF_MS.length; attempt++) {
+          try {
+            const fetchOpts = attempt === 0 ? { cache: 'default' } : { cache: 'reload' };
+            const res = await fetch(url, fetchOpts);
+            if (!res.ok) throw new Error('HTTP ' + res.status + ' for ' + url);
+            return await res.arrayBuffer();
+          } catch (err) {
+            lastErr = err;
+            if (attempt < BACKOFF_MS.length) {
+              await sleep(BACKOFF_MS[attempt]);
+            }
+          }
+        }
+        throw lastErr || new Error('Network fetch failed: ' + url);
+      }
+
+      async function deriveAesKey(passphrase, saltBytes, iterations) {
+        const baseKey = await crypto.subtle.importKey(
+          'raw',
+          enc.encode(normalizePassphrase(passphrase)),
+          'PBKDF2',
+          false,
+          ['deriveKey']
+        );
+        return crypto.subtle.deriveKey(
+          {
+            name: 'PBKDF2',
+            salt: saltBytes,
+            iterations: iterations,
+            hash: 'SHA-256'
+          },
+          baseKey,
+          { name: 'AES-GCM', length: 256 },
+          false,
+          ['decrypt']
+        );
+      }
+
+      async function decryptChunk(aesKey, cipherBuf, ivB64, aadString) {
+        const iv = b64ToBytes(ivB64);
+        const aad = enc.encode(aadString);
+        return crypto.subtle.decrypt(
+          { name: 'AES-GCM', iv: iv, additionalData: aad },
+          aesKey,
+          cipherBuf
+        );
+      }
+
+      async function decryptPool(entries, aesKey, saltTag, onProgress) {
+        const results = new Array(entries.length);
+        let cursor = 0;
+        let completed = 0;
+
+        async function worker() {
+          while (cursor < entries.length) {
+            const idx = cursor++;
+            const item = entries[idx];
+            const url = './encrypted/' + item.chunk + '?v=' + encodeURIComponent(saltTag);
+            const cipherBuf = await fetchWithRetry(url);
+            const plainBuf = await decryptChunk(aesKey, cipherBuf, item.ivB64, item.path);
+            results[idx] = { entry: item, plainBuf: plainBuf };
+            completed++;
+            if (onProgress) onProgress(completed, entries.length);
+          }
+        }
+
+        const workerCount = Math.min(MAX_WORKERS, entries.length);
+        const workers = [];
+        for (let w = 0; w < workerCount; w++) workers.push(worker());
+        await Promise.all(workers);
+        return results;
+      }
+
+      function registerBlobAliases(blobMap, relPath, blobUrl) {
+        createdBlobUrls.push(blobUrl);
+        blobMap[relPath] = blobUrl;
+        blobMap['./' + relPath] = blobUrl;
+        blobMap['/' + relPath] = blobUrl;
+        const base = relPath.split('/').pop();
+        if (base) {
+          blobMap[base] = blobUrl;
+          blobMap['./' + base] = blobUrl;
+          blobMap['assets/' + base] = blobUrl;
+        }
+      }
+
+      function rewriteCssUrls(cssText, blobMap) {
+        let cleaned = cssText.replace(/,\s*url\((['"]?)([^)'"]+\.ttf)\1\)\s*format\((['"]?)truetype\3\)/gi, function (_full, _q, rawUrl) {
+          const key = rawUrl.replace(/^\.\//, '');
+          const b = blobMap[rawUrl] || blobMap[key] || blobMap[rawUrl.split('/').pop()];
+          return b ? ', url("' + b + '") format("truetype")' : '';
+        });
+
+        cleaned = cleaned.replace(/url\((['"]?)([^)'"]+)\1\)/g, function (full, _q, rawUrl) {
+          if (rawUrl.startsWith('data:') || rawUrl.startsWith('blob:') || rawUrl.startsWith('#')) {
+            return full;
+          }
+          const cleanKey = rawUrl.split('?')[0].split('#')[0];
+          const base = cleanKey.split('/').pop();
+          const mapped = blobMap[cleanKey] || blobMap[base];
+          return mapped ? 'url("' + mapped + '")' : full;
+        });
+        return cleaned;
+      }
+
+      window.__GOFAR_LOCK_SESSION__ = function () {
+        activeSessionId++;
+        document.querySelectorAll('video, audio').forEach(function (m) {
+          try {
+            m.pause();
+            m.removeAttribute('src');
+            m.load();
+          } catch (_e) {}
+        });
+        for (const u of createdBlobUrls) {
+          try { URL.revokeObjectURL(u); } catch (_e) {}
+        }
+        createdBlobUrls = [];
+        window.__GOFAR_BLOB_MAP__ = {};
+        window.__GOFAR_STAGE2_COMPLETE__ = false;
+
+        for (const node of mountedDomNodes) {
+          try { node.remove(); } catch (_e) {}
+        }
+        mountedDomNodes = [];
+        const printDeck = document.getElementById('print-deck-root');
+        if (printDeck) printDeck.remove();
+
+        passInput.value = '';
+        passInput.type = 'password';
+        toggleBtn.textContent = 'Show';
+        toggleBtn.setAttribute('aria-pressed', 'false');
+        submitBtn.disabled = false;
+        progWrap.style.display = 'none';
+        progFill.style.width = '0%';
+        errorEl.style.display = 'none';
+        gateShell.style.display = 'flex';
+        passInput.focus();
+      };
+
+      form.addEventListener('submit', async function (ev) {
+        ev.preventDefault();
+        errorEl.style.display = 'none';
+        errorEl.textContent = '';
+
+        const passphrase = normalizePassphrase(passInput.value);
+        if (!passphrase) return;
+
+        const thisSession = ++activeSessionId;
+        submitBtn.disabled = true;
+        progWrap.style.display = 'block';
+        progFill.style.width = '8%';
+        statusEl.textContent = 'Fetching cipher metadata...';
+
+        try {
+          const metaRes = await fetch('./encrypted/meta.json', { cache: 'no-cache' });
+          if (!metaRes.ok) throw new Error('Unable to load meta.json');
+          const meta = await metaRes.json();
+
+          progFill.style.width = '18%';
+          statusEl.textContent = 'Deriving PBKDF2-SHA256 key (600,000 iterations)...';
+          await sleep(16);
+
+          const saltBytes = b64ToBytes(meta.saltB64);
+          const aesKey = await deriveAesKey(passphrase, saltBytes, meta.iterations);
+
+          progFill.style.width = '32%';
+          statusEl.textContent = 'Authenticating manifest...';
+          const manifestCipher = await fetchWithRetry(
+            './encrypted/' + meta.manifestFile + '?v=' + encodeURIComponent(meta.saltTag)
+          );
+
+          let manifestPlain;
+          try {
+            manifestPlain = await decryptChunk(aesKey, manifestCipher, meta.manifestIvB64, 'manifest.json');
+          } catch (_authErr) {
+            throw new Error('INVALID_PASSPHRASE');
+          }
+
+          const manifest = JSON.parse(dec.decode(manifestPlain));
+          const stage1Entries = manifest.files.filter(function (f) { return f.stage === 1; });
+          const stage2Entries = manifest.files.filter(function (f) { return f.stage !== 1; });
+
+          statusEl.textContent = 'Decrypting Stage 1 core bundle (' + stage1Entries.length + ' chunks)...';
+          const stage1Decrypted = await decryptPool(stage1Entries, aesKey, meta.saltTag, function (done, total) {
+            const pct = 34 + Math.round((done / Math.max(1, total)) * 60);
+            progFill.style.width = pct + '%';
+          });
+          if (thisSession !== activeSessionId) return;
+
+          const blobMap = {};
+          window.__GOFAR_BLOB_MAP__ = blobMap;
+          window.__GOFAR_STAGE2_COMPLETE__ = false;
+
+          const cssItems = [];
+          const jsItems = [];
+
+          for (const item of stage1Decrypted) {
+            const p = item.entry.path;
+            if (p.endsWith('.css')) {
+              cssItems.push(item);
+            } else if (p.endsWith('.js') || p.endsWith('.mjs')) {
+              jsItems.push(item);
+            } else if (p !== 'index.html') {
+              const url = URL.createObjectURL(new Blob([item.plainBuf], { type: item.entry.mime }));
+              registerBlobAliases(blobMap, p, url);
+            }
+          }
+
+          const styleLoadPromises = cssItems.map(function (cssItem) {
+            const rawCss = dec.decode(cssItem.plainBuf);
+            const rewrittenCss = rewriteCssUrls(rawCss, blobMap);
+            const cssBlobUrl = URL.createObjectURL(new Blob([rewrittenCss], { type: 'text/css; charset=utf-8' }));
+            registerBlobAliases(blobMap, cssItem.entry.path, cssBlobUrl);
+            return new Promise(function (resolve) {
+              const link = document.createElement('link');
+              link.rel = 'stylesheet';
+              link.href = cssBlobUrl;
+              link.onload = resolve;
+              link.onerror = resolve;
+              document.head.appendChild(link);
+              mountedDomNodes.push(link);
+            });
+          });
+
+          await Promise.all(styleLoadPromises);
+          if (thisSession !== activeSessionId) return;
+
+          progFill.style.width = '100%';
+          statusEl.textContent = 'Mounting showcase...';
+
+          passInput.value = '';
+          gateShell.style.display = 'none';
+
+          const appContainer = document.createElement('div');
+          appContainer.id = 'app';
+          document.body.appendChild(appContainer);
+          mountedDomNodes.push(appContainer);
+
+          for (const jsItem of jsItems) {
+            const jsText = dec.decode(jsItem.plainBuf) + '\n//# session=' + thisSession;
+            const jsBlobUrl = URL.createObjectURL(new Blob([jsText], { type: 'text/javascript; charset=utf-8' }));
+            registerBlobAliases(blobMap, jsItem.entry.path, jsBlobUrl);
+            const script = document.createElement('script');
+            script.type = 'module';
+            script.src = jsBlobUrl;
+            document.body.appendChild(script);
+            mountedDomNodes.push(script);
+          }
+
+          if (stage2Entries.length > 0) {
+            decryptPool(stage2Entries, aesKey, meta.saltTag).then(function (stage2Decrypted) {
+              if (thisSession !== activeSessionId) return;
+              for (const item of stage2Decrypted) {
+                const url = URL.createObjectURL(new Blob([item.plainBuf], { type: item.entry.mime }));
+                registerBlobAliases(blobMap, item.entry.path, url);
+              }
+              window.__GOFAR_STAGE2_COMPLETE__ = true;
+              window.dispatchEvent(new CustomEvent('gofar:stage2-ready'));
+            }).catch(function () {});
+          } else {
+            window.__GOFAR_STAGE2_COMPLETE__ = true;
+          }
+        } catch (err) {
+          submitBtn.disabled = false;
+          progWrap.style.display = 'none';
+          errorEl.style.display = 'block';
+          if (err && err.message === 'INVALID_PASSPHRASE') {
+            errorEl.textContent = 'Authentication failed: invalid passphrase or tampered ciphertext.';
+          } else {
+            errorEl.textContent = 'Decryption error: ' + (err && err.message ? err.message : String(err));
+          }
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
